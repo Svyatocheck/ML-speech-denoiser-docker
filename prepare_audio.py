@@ -4,9 +4,9 @@ from constants import *
 
 class FeatureInputGenerator:
 
-    def start_preprocess(self, audio):
+    def start_preprocess(self, audio, isVideo):
         try:
-            spectrogram = self._make_spectrograms(audio)
+            spectrogram = self._make_spectrograms(audio, isVideo)
         except:
             raise Exception('Audio is empty, we can not help ya!')
         
@@ -18,19 +18,20 @@ class FeatureInputGenerator:
         return x_predictor
     
     
-    def _read_audio_files(self, path, normalize):
+    def _read_audio_files(self, path, normalize, isVideo = False):
         '''Загрузка, удаление тихих участков из аудио файла, нормализация.'''
         audio, _ = librosa.load(path, sr=SAMPLE_RATE)
         if normalize:
-            audio, _ = librosa.effects.trim(audio)
+            if isVideo:
+                audio, _ = librosa.effects.trim(audio)
             div_fac = 1 / np.max(np.abs(audio)) / 3.0
             audio = audio * div_fac
         return audio
     
     
-    def _make_spectrograms(self, audio, clean = False):
+    def _make_spectrograms(self, audio, clean = False, isVideo = False):
         '''Создание STFT диаграмм.'''
-        audio = self._read_audio_files(audio, clean)
+        audio = self._read_audio_files(audio, clean, isVideo)
         stft = librosa.stft(y=audio, n_fft=N_FFT,hop_length=OVERLAP, center=True, window='hamming')
         return stft
     
