@@ -1,0 +1,18 @@
+<html>  
+<head>  
+    <title>Denoise some files</title>  
+</head>  
+<body>
+    <p>Pick audio or video file you want to denoise and upload it. If everything is fine you will get denoised file back after a few sec.</p>
+    <h2>Audio files here:</h2>
+    <form action = "/send_audio" method = "post" enctype="multipart/form-data">  
+        <input type="file" name="file" />  
+        <input type = "submit" value="Upload">  
+    </form>  
+    <h2>Video files here:</h2>
+    <form action = "/send_video" method = "post" enctype="multipart/form-data" name="videos">  
+        <input type="file" name="file" />  
+        <input type = "submit" value="Upload">
+    </form>
+</body>  
+</html>

@@ -1,11 +1,12 @@
 from prepare_audio import FeatureInputGenerator
 from restore_audio import AudioRestorer
 
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, render_template
 import os
+import moviepy.editor as mp
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import tensorflow as tf
-import moviepy.editor as mp
 
 AUDIOS_PATH = 'audios'
 VIDEOS_PATH = 'videos'
@@ -15,9 +16,13 @@ model = tf.keras.models.load_model('speech_model.h5')
 
 app = Flask('speech-denoising')
 
+@app.route('/')  
+def main():  
+    return render_template("index.html")  
+
 @app.route('/send_audio', methods=['POST'])
 def receive_and_denoise():
-    file = request.files['messageFile']
+    file = request.files['file']
     
     if file.filename.endswith('.mp3') or file.filename.endswith('.wav'):
         filepath = f"{AUDIOS_PATH}/{file.filename}"
@@ -25,19 +30,19 @@ def receive_and_denoise():
         
         clean_audio = clean(filepath)
         
-        if os.path.isfile(clean_audio):
+        if os.path.isfile(clean_audio): 
             response = send_file(clean_audio, mimetype="audio/wav", as_attachment=True)
             os.remove(filepath)
             os.remove(clean_audio)
             return response
-
-    return {"message": "cannot download audio"}, 401
+        
+    return render_template("error.html")
+    # return {"message": "cannot download audio"}, 401
 
 
 @app.route('/send_video', methods=['POST'])
 def video_denoise():
-    file = request.files['messageFile']
-    
+    file = request.files['file']
     if file.filename.endswith('.mp4') or file.filename.endswith('.mov'):
         clean_filename = get_clean_filename(file.filename)
         video_path = f'{VIDEOS_PATH}/{file.filename}'
@@ -64,8 +69,8 @@ def video_denoise():
             os.remove(clean_audio_path)
             os.remove(denoised_video_path)
             return response
-
-    return {"message": "cannot download video"}, 401
+    return render_template("error.html")
+    # return {"message": "cannot download video"}, 401
 
 
 def get_clean_filename(filepath):
