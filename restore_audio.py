@@ -23,6 +23,6 @@ class AudioRestorer:
 
 
     def write_audio(self, denoised, filename):
-        path = f'audios/{filename}_denoised.wav'
+        path = f'audios/{filename}.wav'
         sf.write(path, denoised, SAMPLE_RATE)
         return path
