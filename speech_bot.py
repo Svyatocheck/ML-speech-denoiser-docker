@@ -27,6 +27,12 @@ def start(message):
     bot.send_message(message.from_user.id, greetingsText)
     bot.send_message(message.from_user.id,
                      'Send me file or record an audio/video message and I will try to denoise it.')
+    
+    try: 
+        os.mkdir("audios") 
+        os.mkdir("videos") 
+    except OSError as error: 
+        print(error)  
 
 
 # all files processing
@@ -58,7 +64,8 @@ def message_processing(message):
         else:
             video_processing(message)
 
-    except:
+    except Exception as ex:
+        print(ex)
         bot.send_message(
             message.chat.id, "Make sure your files are good to denoise. Otherwise it's problem with me.")
 
@@ -107,8 +114,8 @@ def audio_processing(message):
             bot.send_message(
                 message.chat.id, "Something is wrong with your file. I'm sorry, I can't clean it.")
 
-    except:
-        print("Error while audio processing.")
+    except Exception as ex:
+        print(ex)
         bot.send_message(message.chat.id, "Something is wrong :(")
 
 
@@ -173,8 +180,8 @@ def video_processing(message):
         else:
             bot.send_message(
                 message.chat.id, "Something is wrong with your file. I'm sorry, I can't clean it.")
-    except:
-        print("Error while video processing.")
+    except Exception as ex:
+        print(ex)
         bot.send_message(message.chat.id, "Something is wrong :(")
 
 
