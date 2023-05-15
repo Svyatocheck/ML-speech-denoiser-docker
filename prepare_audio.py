@@ -19,7 +19,11 @@ class FeatureInputGenerator:
         return x_predictor
 
 
+<<<<<<< HEAD
     def _make_spectrograms(self, audio_path, normalize=False):
+=======
+    def _make_spectrograms(self, audio_path, normalize=True):
+>>>>>>> 1e3dd7c (fixes)
         """
         This function takes in an audio file and generates spectrograms using the librosa library.
         :param audio_path: path to audio file

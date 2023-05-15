@@ -155,7 +155,7 @@ def video_processing(message):
         video.audio.write_audiofile(audio_path)
 
         # Clean audio
-        clean_audio_path = clean(audio_path, True)
+        clean_audio_path = clean(audio_path)
         clip_audio = mp.AudioFileClip(clean_audio_path)
 
         # Cincatenate new audio with video
@@ -185,11 +185,11 @@ def video_processing(message):
         bot.send_message(message.chat.id, "Something is wrong :(")
 
 
-def clean(filepath: str, isVideo=False):
+def clean(filepath: str):
     try:
         # Extract features from audio to use them in model
         input_generator = FeatureInputGenerator()
-        prepared_features = input_generator.start_preprocess(filepath, isVideo)
+        prepared_features = input_generator.start_preprocess(filepath)
     except:
         print("Exception during audio preparation.")
         return
